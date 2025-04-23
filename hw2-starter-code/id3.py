@@ -63,6 +63,29 @@ def infogain(py_pxi, pxi, py, total):
 # - find the best variable to split on, according to mutual information
 # - partition data based on a given variable
 
+# a function for calculating the parameters for infogain
+# data is the data to count
+# x is the feature to count by
+count_set (data, x):
+    py_pxi = pxi = py = total = 0
+    for val in data:
+        if val[x] == 1 and val[-1] == 0:
+            pxi += 1
+        elif val[x] == 1 and val[-1] == 1:
+            pxi += 1
+            py += 1
+            py_pxi += 1 
+        elif val[x] == 0 and val[-1] == 1:
+            py += 1
+        total += 1
+    return py_xi, pxi, py, total
+
+# a function for splitting a set of data on a feature x
+# returns a tuple of the subset of data with x=0 and the subset of data with x=1
+split_on(data, x):
+    xpos = [s for s in data where s[x] == 1]
+    xneg = [s for s in data where s[x] == 0]
+    return xneg, xpos
 
 # Load data from a file
 def read_data(filename):
