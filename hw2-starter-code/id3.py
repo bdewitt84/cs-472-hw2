@@ -20,16 +20,17 @@ root = None
 
 # Helper function computes entropy of Bernoulli distribution with
 # parameter p
-# p is a non-empty vector of binary values
-# p is usually the class column of a set/subset of data
+
+# let p be the porportion of positive examples (makani)
 def entropy(p):
     # >>>> YOUR CODE GOES HERE <<<<
     # For now, always return "0":
+    """
     if len(p) == 0:
         raise ValueError("p is empty")
     p_pos = 0
     p_neg = 0
-
+	
     for val in p:
         if val:
             p_pos += 1
@@ -37,8 +38,9 @@ def entropy(p):
             p_neg += 1    
 
     total = p_pos + p_neg
-    p_pos /= total
-    p_neg /= total
+    """
+    p_pos = p 
+    p_neg = 1 - p
     # let a + b = entropy
     a = 0 if p_pos == 0 else (-p_pos * math.log(p_pos, 2))
     b = 0 if p_neg == 0 else (-p_neg * math.log(p_neg, 2))
