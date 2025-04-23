@@ -86,8 +86,24 @@ def print_model(root, modelfile):
 # pure leaf or all splits look bad.
 def build_tree(data, varnames):
     # >>>> YOUR CODE GOES HERE <<<<
+    # If all examples of S belong to the same class c
+    class_comp = [sample[-1] for sample in data] # the classes in data
+    if entropy(class_comp) == 0: # if all samples are the same class
+        c = class_comp[0] # all samples have same class c
+        # return a new leaf and label it with c
+        return node.Leaf(varnames, c)
+    else:
+    # Else
+        # Select an attribute A maximizing information gain
+        # Generate a new node DT with A as its test
+        # For each value vi of A
+            # Let Si = all examples in S with A = vi
+            # Use ID3 to construct a decision tree DTi for Si
+            # Make DTi a child of DT 
+        # Return DT
+        return node.Leaf(varnames, 1)
     # For now, always return a leaf predicting "1":
-    return node.Leaf(varnames, 1)
+    #return node.Leaf(varnames, 1)
 
 
 # "varnames" is a list of names, one for each variable
