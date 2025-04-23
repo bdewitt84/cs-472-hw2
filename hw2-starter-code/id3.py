@@ -9,6 +9,7 @@ import sys
 import re
 # Node class for the decision tree
 import node
+import math
 
 train = None
 varnames = None
@@ -19,10 +20,29 @@ root = None
 
 # Helper function computes entropy of Bernoulli distribution with
 # parameter p
+# p is a non-empty vector of binary values
+# p is usually the class column of a set/subset of data
 def entropy(p):
     # >>>> YOUR CODE GOES HERE <<<<
     # For now, always return "0":
-    return 0
+    if len(p) == 0:
+        raise ValueError("p is empty")
+    p_pos = 0
+    p_neg = 0
+
+    for val in p:
+        if val:
+            p_pos += 1
+        else:
+            p_neg += 1    
+
+    total = p_pos + p_neg
+    p_pos /= total
+    p_neg /= total
+    # let a + b = entropy
+    a = 0 if p_pos == 0 else (-p_pos * math.log(p_pos, 2))
+    b = 0 if p_neg == 0 else (-p_neg * math.log(p_neg, 2))
+    return a + b
 
 
 # Compute information gain for a particular split, given the counts
