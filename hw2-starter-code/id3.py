@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+# !/usr/bin/python3
 #
 # CIS 472/572 -- Programming Homework #1
 #
@@ -136,9 +136,16 @@ def build_tree(data, varnames):
     # >>>> YOUR CODE GOES HERE <<<<
     # If all examples of S belong to the same class c
     class_comp = [sample[-1] for sample in data] # the classes in data
-    if entropy(class_comp) == 0: # if all samples are the same class
-        c = class_comp[0] # all samples have same class c
+    c = class_comp[0]
+    same = True
+    for s in class_comp:
+        if c != s:
+            same = False
+            break
+        c = s
+    if same == 0: # if all samples are the same class
         # return a new leaf and label it with c
+        print("PURE")
         return node.Leaf(varnames, c)
     else:
     # Else
@@ -149,6 +156,7 @@ def build_tree(data, varnames):
             # Use ID3 to construct a decision tree DTi for Si
             # Make DTi a child of DT
         # Return DT
+        print("TAINTED")
         return node.Leaf(varnames, 1)
     # For now, always return a leaf predicting "1":
     #return node.Leaf(varnames, 1)
