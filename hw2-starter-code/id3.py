@@ -60,30 +60,33 @@ def entropy(p):
 def infogain(py_pxi, pxi, py, total):
     # >>>> YOUR CODE GOES HERE <<<<
 
-    # First want total entropy before the split
-    total_e = entropy(py/total)
+    # First want overall entropy before the split
+    e_before = entropy(py/total)
 
-    # e1 is entropy of
-    # number of times feature occurs where class = 1
-    # over number of times feature occurs
-    # This gives us our probability of class=1 when the feature is present
-    e1 = entropy(py_pxi / pxi)
+    # e1 is entropy of the subset where x_i=1
+    # p is probability of class=1 when the feature is present
+    if pxi == 0:
+        # Avoid divide by zero if feature is not present in subset
+        e1 = 0
+    else:
+        e1 = entropy(py_pxi / pxi)
 
-    # e2 is entropy of
-    # number of time feature DOES NOT occur where class = 1
-    # over number of times feature DOES NOT occur
-    # This gives us our probability of class=1 when the feature is NOT present
-    e2 = entropy((py - py_pxi) / (total - pxi))
+    # e2 is entropy of the subset where x_i=0
+    # p is probability of class=1 when the feature is NOT present
+    if (total - pxi) == 0:
+        # Avoid divide by zero if feature saturates data set
+        e2 = 0
+    else:
+        e2 = entropy((py - py_pxi) / (total - pxi))
 
     # Get weighted average of e1 and e2
+    w1 = pxi / total            # Number of occurrences of x_i=1 over total number of data points
+    w2 = (total - pxi) / total  # Number of occurrences of x_i=0 over total number of data points
 
-    weight1 = pxi / total           # Number of occurrences of x_i=1 over total number of data points
-    weight2 = total - pxi / total   # Number of occurrences of x_i=0 over total number of data points
+    e_after = (w1 * e1) + (w2 * e2)
 
-    weighted_avg = (weight1 * e1) + (weight2 * e2)
-
-    # Gain is calculated by (total entropy) - (weighted average)
-    return (total_e - weighted_avg)
+    # Gain is calculated by (entropy before split) - (weighted average entropy after split)
+    return (e_before - e_after)
 
 
 # OTHER SUGGESTED HELPER FUNCTIONS:
