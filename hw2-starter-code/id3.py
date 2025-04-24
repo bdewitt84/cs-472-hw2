@@ -101,7 +101,7 @@ def count_set (data, x):
         elif val[x] == 0 and val[-1] == 1:
             py += 1
         total += 1
-    return py_xi, pxi, py, total
+    return py_pxi, pxi, py, total
 
 # a function for splitting a set of data on a feature x
 # returns a tuple of the subset of data with x=0 and the subset of data with x=1
