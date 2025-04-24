@@ -21,6 +21,11 @@ root = None
 # Helper function computes entropy of Bernoulli distribution with
 # parameter p
 
+# A Bernoulli trial is an experiment that has two possible outcomes,
+# a success and a failure.
+# We denote the probability of success by p
+# https://www.ncl.ac.uk/webtemplate/ask-assets/external/maths-resources/statistics/distributions/bernoulli-distribution.html
+
 # let p be the porportion of positive examples (makani)
 def entropy(p):
     # >>>> YOUR CODE GOES HERE <<<<
@@ -30,7 +35,7 @@ def entropy(p):
         raise ValueError("p is empty")
     p_pos = 0
     p_neg = 0
-	
+
     for val in p:
         if val:
             p_pos += 1
@@ -39,7 +44,7 @@ def entropy(p):
 
     total = p_pos + p_neg
     """
-    p_pos = p 
+    p_pos = p
     p_neg = 1 - p
     # let a + b = entropy
     a = 0 if p_pos == 0 else (-p_pos * math.log(p_pos, 2))
@@ -48,14 +53,37 @@ def entropy(p):
 
 
 # Compute information gain for a particular split, given the counts
-# py_pxi : number of occurences of y=1 with x_i=1 for all i=1 to n
+# py_pxi : number of occurrences of y=1 with x_i=1 for all i=1 to n
 # pxi : number of occurrences of x_i=1
-# py : number of ocurrences of y=1
+# py : number of occurrences of y=1
 # total : total length of the data
 def infogain(py_pxi, pxi, py, total):
     # >>>> YOUR CODE GOES HERE <<<<
-    # For now, always return "0":
-    return 0
+
+    # First want total entropy before the split
+    total_e = entropy(py/total)
+
+    # e1 is entropy of
+    # number of times feature occurs where class = 1
+    # over number of times feature occurs
+    # This gives us our probability of class=1 when the feature is present
+    e1 = entropy(py_pxi / pxi)
+
+    # e2 is entropy of
+    # number of time feature DOES NOT occur where class = 1
+    # over number of times feature DOES NOT occur
+    # This gives us our probability of class=1 when the feature is NOT present
+    e2 = entropy((py - py_pxi) / (total - pxi))
+
+    # Get weighted average of e1 and e2
+
+    weight1 = pxi / total           # Number of occurrences of x_i=1 over total number of data points
+    weight2 = total - pxi / total   # Number of occurrences of x_i=0 over total number of data points
+
+    weighted_avg = (weight1 * e1) + (weight2 * e2)
+
+    # Gain is calculated by (total entropy) - (weighted average)
+    return (total_e - weighted_avg)
 
 
 # OTHER SUGGESTED HELPER FUNCTIONS:
@@ -66,26 +94,28 @@ def infogain(py_pxi, pxi, py, total):
 # a function for calculating the parameters for infogain
 # data is the data to count
 # x is the feature to count by
-count_set (data, x):
-    py_pxi = pxi = py = total = 0
-    for val in data:
-        if val[x] == 1 and val[-1] == 0:
-            pxi += 1
-        elif val[x] == 1 and val[-1] == 1:
-            pxi += 1
-            py += 1
-            py_pxi += 1 
-        elif val[x] == 0 and val[-1] == 1:
-            py += 1
-        total += 1
-    return py_xi, pxi, py, total
+def count_set (data, x):
+    # py_pxi = pxi = py = total = 0
+    # for val in data:
+    #     if val[x] == 1 and val[-1] == 0:
+    #         pxi += 1
+    #     elif val[x] == 1 and val[-1] == 1:
+    #         pxi += 1
+    #         py += 1
+    #         py_pxi += 1
+    #     elif val[x] == 0 and val[-1] == 1:
+    #         py += 1
+    #     total += 1
+    # return py_xi, pxi, py, total
+    pass
 
 # a function for splitting a set of data on a feature x
 # returns a tuple of the subset of data with x=0 and the subset of data with x=1
-split_on(data, x):
-    xpos = [s for s in data where s[x] == 1]
-    xneg = [s for s in data where s[x] == 0]
-    return xneg, xpos
+def split_on(data, x):
+    # xpos = [s for s in data where s[x] == 1]
+    # xneg = [s for s in data where s[x] == 0]
+    # return xneg, xpos
+    pass
 
 # Load data from a file
 def read_data(filename):
@@ -124,7 +154,7 @@ def build_tree(data, varnames):
         # For each value vi of A
             # Let Si = all examples in S with A = vi
             # Use ID3 to construct a decision tree DTi for Si
-            # Make DTi a child of DT 
+            # Make DTi a child of DT
         # Return DT
         return node.Leaf(varnames, 1)
     # For now, always return a leaf predicting "1":
