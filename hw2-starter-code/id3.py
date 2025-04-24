@@ -83,27 +83,25 @@ def infogain(py_pxi, pxi, py, total):
 # data is the data to count
 # x is the feature to count by
 def count_set (data, x):
-    # py_pxi = pxi = py = total = 0
-    # for val in data:
-    #     if val[x] == 1 and val[-1] == 0:
-    #         pxi += 1
-    #     elif val[x] == 1 and val[-1] == 1:
-    #         pxi += 1
-    #         py += 1
-    #         py_pxi += 1
-    #     elif val[x] == 0 and val[-1] == 1:
-    #         py += 1
-    #     total += 1
-    # return py_xi, pxi, py, total
-    pass
+    py_pxi = pxi = py = total = 0
+    for val in data:
+        if val[x] == 1 and val[-1] == 0:
+            pxi += 1
+        elif val[x] == 1 and val[-1] == 1:
+            pxi += 1
+            py += 1
+            py_pxi += 1
+        elif val[x] == 0 and val[-1] == 1:
+            py += 1
+        total += 1
+    return py_pxi, pxi, py, total
 
 # a function for splitting a set of data on a feature x
 # returns a tuple of the subset of data with x=0 and the subset of data with x=1
 def split_on(data, x):
-    # xpos = [s for s in data where s[x] == 1]
-    # xneg = [s for s in data where s[x] == 0]
-    # return xneg, xpos
-    pass
+    xpos = [s for s in data if s[x] == 1]
+    xneg = [s for s in data if s[x] == 0]
+    return xneg, xpos
 
 # Load data from a file
 def read_data(filename):
@@ -131,9 +129,16 @@ def build_tree(data, varnames):
     # >>>> YOUR CODE GOES HERE <<<<
     # If all examples of S belong to the same class c
     class_comp = [sample[-1] for sample in data] # the classes in data
-    if entropy(class_comp) == 0: # if all samples are the same class
-        c = class_comp[0] # all samples have same class c
+    c = class_comp[0]
+    same = True
+    for s in class_comp:
+        if c != s:
+            same = False
+            break
+        c = s
+    if same == 0: # if all samples are the same class
         # return a new leaf and label it with c
+        print("PURE")
         return node.Leaf(varnames, c)
     else:
     # Else
@@ -144,6 +149,7 @@ def build_tree(data, varnames):
             # Use ID3 to construct a decision tree DTi for Si
             # Make DTi a child of DT
         # Return DT
+        print("TAINTED")
         return node.Leaf(varnames, 1)
     # For now, always return a leaf predicting "1":
     #return node.Leaf(varnames, 1)
