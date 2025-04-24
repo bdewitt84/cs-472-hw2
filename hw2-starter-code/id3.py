@@ -21,11 +21,6 @@ root = None
 # Helper function computes entropy of Bernoulli distribution with
 # parameter p
 
-# A Bernoulli trial is an experiment that has two possible outcomes,
-# a success and a failure.
-# We denote the probability of success by p
-# https://www.ncl.ac.uk/webtemplate/ask-assets/external/maths-resources/statistics/distributions/bernoulli-distribution.html
-
 # let p be the porportion of positive examples (makani)
 def entropy(p):
     # >>>> YOUR CODE GOES HERE <<<<
@@ -95,27 +90,25 @@ def infogain(py_pxi, pxi, py, total):
 # data is the data to count
 # x is the feature to count by
 def count_set (data, x):
-    # py_pxi = pxi = py = total = 0
-    # for val in data:
-    #     if val[x] == 1 and val[-1] == 0:
-    #         pxi += 1
-    #     elif val[x] == 1 and val[-1] == 1:
-    #         pxi += 1
-    #         py += 1
-    #         py_pxi += 1
-    #     elif val[x] == 0 and val[-1] == 1:
-    #         py += 1
-    #     total += 1
-    # return py_xi, pxi, py, total
-    pass
+    py_pxi = pxi = py = total = 0
+    for val in data:
+        if val[x] == 1 and val[-1] == 0:
+            pxi += 1
+        elif val[x] == 1 and val[-1] == 1:
+            pxi += 1
+            py += 1
+            py_pxi += 1 
+        elif val[x] == 0 and val[-1] == 1:
+            py += 1
+        total += 1
+    return py_xi, pxi, py, total
 
 # a function for splitting a set of data on a feature x
 # returns a tuple of the subset of data with x=0 and the subset of data with x=1
 def split_on(data, x):
-    # xpos = [s for s in data where s[x] == 1]
-    # xneg = [s for s in data where s[x] == 0]
-    # return xneg, xpos
-    pass
+    xpos = [s for s in data if s[x] == 1]
+    xneg = [s for s in data if s[x] == 0]
+    return xneg, xpos
 
 # Load data from a file
 def read_data(filename):
