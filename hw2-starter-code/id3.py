@@ -73,7 +73,7 @@ def infogain(py_pxi, pxi, py, total):
     # Get weighted average of e1 and e2
 
     weight1 = pxi / total           # Number of occurrences of x_i=1 over total number of data points
-    weight2 = total - pxi / total   # Number of occurrences of x_i=0 over total number of data points
+    weight2 = (total - pxi) / total   # Number of occurrences of x_i=0 over total number of data points
 
     weighted_avg = (weight1 * e1) + (weight2 * e2)
 
