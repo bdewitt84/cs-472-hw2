@@ -145,7 +145,7 @@ def build_tree(data, varnames):
         # Select an attribute A maximizing information gain
         A = 0
         max_gain = 0
-        for i in range(len(varnames)):
+        for i in range(len(varnames)-1):
             counts = count_set(data, i)
             gain = infogain(*counts)
             print(gain)
