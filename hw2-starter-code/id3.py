@@ -136,20 +136,28 @@ def build_tree(data, varnames):
             same = False
             break
         c = s
-    if same == 0: # if all samples are the same class
+    if same: # if all samples are the same class
         # return a new leaf and label it with c
         print("PURE")
         return node.Leaf(varnames, c)
-    else:
-    # Else
+    else: # else
+        print("TAINTED")
         # Select an attribute A maximizing information gain
+        A = 0
+        max_gain = 0
+	for i in range(len(varnames)):
+            counts = count_set(data, i)
+            gain = infogain(counts*)
+            print(gain)
+            if gain > max_gain:
+                max_gain = gain
+                A = i
         # Generate a new node DT with A as its test
         # For each value vi of A
             # Let Si = all examples in S with A = vi
             # Use ID3 to construct a decision tree DTi for Si
             # Make DTi a child of DT
         # Return DT
-        print("TAINTED")
         return node.Leaf(varnames, 1)
     # For now, always return a leaf predicting "1":
     #return node.Leaf(varnames, 1)
