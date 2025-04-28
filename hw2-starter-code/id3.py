@@ -7,8 +7,7 @@
 #
 import sys
 import re
-# Node class for the decision tree
-import node
+# Node class for the decision tree import node
 import math
 
 train = None
@@ -148,10 +147,11 @@ def build_tree(data, varnames):
         for i in range(len(varnames)-1):
             counts = count_set(data, i)
             gain = infogain(*counts)
-            print(gain)
+            print("%d: %f" %(i, gain))
             if gain > max_gain:
                 max_gain = gain
                 A = i
+        print("Best Attribute: %s (%d): %f" % (varnames[A], A, max_gain))
         # Generate a new node DT with A as its test
         # For each value vi of A
             # Let Si = all examples in S with A = vi
