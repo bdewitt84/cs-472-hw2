@@ -7,7 +7,8 @@
 #
 import sys
 import re
-# Node class for the decision tree import node
+# Node class for the decision tree
+from node import Split, Leaf
 import math
 
 train = None
@@ -124,7 +125,7 @@ def print_model(root, modelfile):
 
 # Build tree in a top-down manner, selecting splits until we hit a
 # pure leaf or all splits look bad.
-def build_tree(data, varnames):
+def build_tree_mak(data, varnames):
     # >>>> YOUR CODE GOES HERE <<<<
     # If all examples of S belong to the same class c
     class_comp = [sample[-1] for sample in data] # the classes in data
@@ -138,7 +139,7 @@ def build_tree(data, varnames):
     if same: # if all samples are the same class
         # return a new leaf and label it with c
         print("PURE")
-        return node.Leaf(varnames, c)
+        return Leaf(varnames, c)
     else: # else
         print("TAINTED")
         # Select an attribute A maximizing information gain
@@ -158,9 +159,72 @@ def build_tree(data, varnames):
             # Use ID3 to construct a decision tree DTi for Si
             # Make DTi a child of DT
         # Return DT
-        return node.Leaf(varnames, 1)
+        return Leaf(varnames, 1)
     # For now, always return a leaf predicting "1":
     #return node.Leaf(varnames, 1)
+
+
+def set_is_pure(data):
+    label = data[0][-1]
+    for sample in data:
+        if sample[-1] != label:
+            return False
+    return True
+
+
+def get_attribute_with_highest_info_gain(data):
+    num_attributes = len(data[0])-1 # last item is class, not attribute, so subtract 1
+    best_attribute = None
+    max_gain = 0
+    for attribute in range(num_attributes):
+        gain = infogain(*count_set(data, attribute))
+        if gain > max_gain:
+            max_gain = gain
+            best_attribute = attribute
+    return best_attribute
+
+
+def partition_data_based_on_attribute(data, attribute_to_split):
+    subset_without_attribute = [sample for sample in data if sample[attribute_to_split] == 0]
+    subset_with_attribute = [sample for sample in data if sample[attribute_to_split] == 1]
+    return subset_without_attribute, subset_with_attribute
+
+
+def get_majority_class(data):
+    count_label_0 = len([sample for sample in data if sample[-1] == 0])
+    count_label_1 = len([sample for sample in data if sample[-1] == 1])
+    if ((count_label_0 > count_label_1) or count_label_0 == count_label_1):
+        return 0
+    else:
+        return 1
+
+
+def build_tree(data, varnames):
+    # If all samples have the same class:
+    if set_is_pure(data):
+        # return a Leaf node labeled with that class
+        label = data[0][-1] # select label from arbitrary sample
+        return Leaf(varnames, label)
+
+    else:
+        # Find the best attribute to split on (based on info gain)
+        attribute_to_split = get_attribute_with_highest_info_gain(data)
+        # Partition the data into:
+        # left: samples where attribute == 0
+        # right: samples where attribute == 1
+        left_data, right_data = partition_data_based_on_attribute(data, attribute_to_split)
+        # If either partition is empty:
+        if not left_data:
+            # Return a Leaf node labeled with the majority class of current data
+            return Leaf(varnames, get_majority_class(right_data))
+        elif not right_data:
+            return Leaf(varnames, get_majority_class(left_data))
+        else:
+            # Recursively call build_tree on left data → left child
+            left_node = build_tree(left_data, varnames)
+            # Recursively call build_tree on right data → right child
+            right_node = build_tree(right_data, varnames)
+            return Split(varnames, attribute_to_split, left_node, right_node)
 
 
 # "varnames" is a list of names, one for each variable
