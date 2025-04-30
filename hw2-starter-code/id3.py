@@ -96,13 +96,6 @@ def count_set (data, x):
         total += 1
     return py_pxi, pxi, py, total
 
-# a function for splitting a set of data on a feature x
-# returns a tuple of the subset of data with x=0 and the subset of data with x=1
-def split_on(data, x):
-    xpos = [s for s in data if s[x] == 1]
-    xneg = [s for s in data if s[x] == 0]
-    return xneg, xpos
-
 # Load data from a file
 def read_data(filename):
     f = open(filename, 'r')
