@@ -171,7 +171,7 @@ def get_attribute_with_highest_info_gain(data):
     max_gain = 0
     for attribute in range(num_attributes):
         gain = infogain(*count_set(data, attribute))
-        if gain > max_gain:
+        if gain >= max_gain:
             max_gain = gain
             best_attribute = attribute
     return best_attribute
@@ -207,10 +207,8 @@ def build_tree(data, varnames):
         # right: samples where attribute == 1
         left_data, right_data = partition_data_based_on_attribute(data, attribute_to_split)
         # If either partition is empty:
-        if not left_data:
+        if not left_data or not right_data:
             # Return a Leaf node labeled with the majority class of current data
-            return Leaf(varnames, get_majority_class(right_data))
-        elif not right_data:
             return Leaf(varnames, get_majority_class(left_data))
         else:
             # Recursively call build_tree on left data → left child
